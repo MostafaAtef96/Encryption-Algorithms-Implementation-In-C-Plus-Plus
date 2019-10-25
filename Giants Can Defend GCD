@@ -1,0 +1,57 @@
+/*
+Given 2 numbers, A and B. Print the Greatest Common Divisor of the 2 numbers.
+Input
+
+The input consists of a single line that has 2 integers A and B (0 ≤ A, B ≤ 2000000000)
+Output
+
+The output should be a single line that has the Greatest Common Divisor of A and B.
+Example
+Input
+15 27
+
+Output
+3
+*/
+
+//g++  5.4.0
+ 
+#include <iostream>
+using namespace std;
+ 
+unsigned long long GCD(unsigned long long aOld, unsigned long long bOld){
+     unsigned long long aNew, bNew;
+    /*Formating inputs before calculations*/
+    if (bOld>aOld){
+        unsigned long long temp;
+        temp=aOld;
+        aOld=bOld;
+        bOld=temp;
+    }
+     /*GCD(0,X)=X*/
+    if(bOld == 0){
+        return aOld;
+    }
+    /*Performing calculations*/
+    aNew=bOld;
+    bNew= aOld%bOld;
+    while(bNew !=0){
+        aOld=aNew;
+        bOld=bNew;
+        aNew=bOld;
+        bNew= aOld%bOld;
+    }
+    /*Return*/
+    return aNew;
+}
+int main()
+{
+    /*Reading inputs*/
+    unsigned long long A,B;
+    cin >> A;
+    cin >> B;
+    /*Calculate the greatest common divisor*/
+    unsigned long long x = GCD(A,B);
+    /*Output*/
+    cout << x << endl;
+}
