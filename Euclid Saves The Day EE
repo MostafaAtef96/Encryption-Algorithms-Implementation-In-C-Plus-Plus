@@ -1,0 +1,85 @@
+/*
+Assume you are working in mod(M) arithmetic, what is the additive and multiplicative inverse of N?
+
+Input
+The input consists of 1 line that has 2 numbers M, N respectively (1 ≤ M, N ≤ 20000000000000000000000)
+
+Output
+In case N has no multiplicative inverse, print "IMPOSSIBLE" without the quotes. Otherwise print 2 numbers which represent the additive and multiplicative inverses respectively of N. All printed numbers must be mod(M)
+
+Examples
+input
+3 2
+output
+1 2
+input
+6 3
+output
+IMPOSSIBLE
+*/
+
+#include <iostream>
+using namespace std;
+ 
+int main()
+{
+	/* Reading Inputs */
+	long long int q;
+	long long int a1Old, a2Old, a3Old, b1Old, b2Old, b3Old;
+	long long int a1New, a2New, a3New, b1New, b2New, b3New;
+	long long int additiveInverse;
+	cin >> a3Old;
+	cin >> b3Old;
+	b3Old = b3Old%a3Old;
+ 
+	/* Additive Inverse */
+	additiveInverse = a3Old - b3Old/*(b3Old%a3Old)*/;
+	/* Multiplicative Inverse */
+	if (b3Old == 1) {
+		cout << additiveInverse << " " << 1 << endl;
+		return 0;
+	}
+	/* Formatting Inputs */
+	long long int M = a3Old;
+	a1Old = 1;
+	a2Old = 0;
+	b1Old = 0;
+	b2Old = 1;
+	q = a3Old / b3Old;
+	a1New = b1Old;
+	a2New = b2Old;
+	a3New = b3Old;
+	b1New = a1Old - (q*a1New);
+	b2New = a2Old - (q*a2New);
+	/*b3New = a3Old % b3Old;*/
+	b3New = a3Old - (q*a3New);
+ 
+	while (b3New != 0 && b3New != 1) {
+		a1Old = a1New;
+		a2Old = a2New;
+		a3Old = a3New;
+		b1Old = b1New;
+		b2Old = b2New;
+		b3Old = b3New;
+		q = a3Old / b3Old;
+		a1New = b1Old;
+		a2New = b2Old;
+		a3New = b3Old;
+		b1New = a1Old - (q*a1New);
+		b2New = a2Old - (q*a2New);
+		/*b3New = a3Old % b3Old;*/
+		b3New = a3Old - (q*a3New);
+	}
+ 
+	/* Outputs */
+	if (b3New == 1) {
+		while (b2New <0) {
+			b2New += M;
+		}
+		cout << additiveInverse << " " << b2New << endl;
+	}
+	else if (b3New == 0) {
+		cout << "IMPOSSIBLE" << endl;
+	}
+ 
+}
