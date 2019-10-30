@@ -1,0 +1,115 @@
+/*
+Given 2 numbers in Hex format that represent 2 polynomials in GF(28) with m(x) = x8 + x4 + x3 + x + 1. Find the result of Adding and Multiplying those numbers. Note: Result of addition is the same as the result of subtraction.
+
+Input
+The input consists of 1 line that has 2 numbers, each of which consists of 2 Hex digits that represent the 2 given numbers as described above.
+
+Output
+In a single line print 2 numbers in Hex format(All characters must be capital), the first one should be the result of the addition of the given 2 numbers and the second is the result of multiplying them. These operations should be done in GF(28) with m(x) = x8 + x4 + x3 + x + 1.
+
+Example
+input
+01 01
+output
+00 01
+*/
+
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <bitset>
+#include <iomanip>
+using namespace std;
+ 
+/*XOR function*/
+string XOR(string x, string y) {
+	while (x.length() > y.length()) {
+		y = "0" + y;
+	}
+	while (x.length() < y.length()) {
+		x = "0" + x;
+	}
+	string result = "";
+	for (int i = 0; i < x.size(); i++) {
+		result += (((x[i] - '0') ^ (y[i] - '0')) + '0');
+	}
+	return result;
+}
+/*Shift left function*/
+string SHIFT(string x) {
+	x = x.substr(1, x.length()) + "0";
+	return x;
+}
+ 
+int main()
+{
+	/*Reading Inputs*/
+	string hexadecimalInput1, hexadecimalInput2;
+	cin >> hexadecimalInput1;
+	cin >> hexadecimalInput2;
+	/*Hexadecimal input conversion to Binary*/
+	string firstPolynomial = "";
+	string secondPolynomial = "";
+	for (int i = 0; i < hexadecimalInput1.size(); i++) {
+		char s = hexadecimalInput1[i];
+		stringstream ss;
+		ss << hex << s;
+		unsigned n;
+		ss >> n;
+		bitset<4> b(n);
+		firstPolynomial += b.to_string();
+	}
+	for (int i = 0; i < hexadecimalInput2.size(); i++) {
+		char s = hexadecimalInput2[i];
+		stringstream ss;
+		ss << hex << s;
+		unsigned n;
+		ss >> n;
+		bitset<4> b(n);
+		secondPolynomial += b.to_string();
+	}
+	/*
+	Here we have two polynomials, firstPolynomial, and secondPolynomial represented in Binary format
+	*/
+	/*Formatting Inputs*/
+	while (firstPolynomial.length() > secondPolynomial.length()) {
+		secondPolynomial = "0" + secondPolynomial;
+	}
+	while (firstPolynomial.length() < secondPolynomial.length()) {
+		firstPolynomial = "0" + firstPolynomial;
+	}
+	/*Addition Calculations*/
+	string additionResult = firstPolynomial;
+	additionResult = XOR(firstPolynomial, secondPolynomial);
+	/*Multiplication*/
+	string multiplicationResult = "00000000";
+	/*First Polynomial Table For Multiplication*/
+	string firstPolynomialCases[8];
+	firstPolynomialCases[0] = firstPolynomial;
+	for (int i = 1; i < 8; i++) {
+		if (firstPolynomialCases[i-1][0] == '1') {
+			firstPolynomialCases[i] = SHIFT(firstPolynomialCases[i - 1]);
+			firstPolynomialCases[i] = XOR(firstPolynomialCases[i], "00011011");
+		}
+		else {
+			firstPolynomialCases[i] = SHIFT(firstPolynomialCases[i - 1]);
+		}
+	}
+	/*Multiplication Calculations*/
+	for (int i = 0; i < 8; i++) {
+		if (secondPolynomial[8-i-1] == '1') {
+			multiplicationResult = XOR(multiplicationResult, firstPolynomialCases[i]);
+		}
+	}
+	/*Formatting Outputs*/
+	unsigned long long decimalAdditionResult = stoull(additionResult, 0, 2);
+	stringstream temp0;
+	temp0 << uppercase << setfill('0') << setw(2) << hex << decimalAdditionResult;
+	additionResult = temp0.str();
+	unsigned long long decimalMultiplicationResult = stoull(multiplicationResult, 0, 2);
+	stringstream temp1;
+	temp1 << uppercase << setfill('0') << setw(2) << hex << decimalMultiplicationResult;
+	multiplicationResult = temp1.str();
+	/*Output*/
+	cout << additionResult << " " << multiplicationResult << endl;
+}
