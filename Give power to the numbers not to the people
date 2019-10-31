@@ -1,0 +1,46 @@
+/*
+Calculate ab mod c. (1 ≤ a, c ≤ 2000000000). (1 ≤ b ≤ 2000000000000000)
+
+Input
+The input consists of a single line that has the 3 numbers a,b & c respectively.
+
+Output
+The output should consist of a single number, the result of the operation ab mod c.
+
+Example
+input
+3 2 5
+output
+4
+*/
+
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <bitset>
+#include <iomanip>
+#include <math.h>
+using namespace std;
+ 
+int main() {
+	/*Reading Inputs*/
+	unsigned long long a, b, c;
+	cin >> a >> b >> c;
+	/*Converting Power To Binary*/
+	string binaryPower = bitset<52>(b).to_string();
+	/*Powers Table*/
+	unsigned long long powersTable[52];
+	powersTable[0] = (a % c);
+	for (int i = 1; i < 52; i++) {
+		powersTable[i] = (powersTable[i - 1] * powersTable[i - 1]) % c;
+	}
+	/*Result Calculations*/
+	unsigned long long result = 1;
+	for (int i = 0; i < 52; i++) {
+		if (binaryPower[i] == '1') {
+			result = (result * powersTable[52 - i - 1]) % c;
+		}
+	}
+	/*Outputs*/
+	cout << result << endl;
+}
