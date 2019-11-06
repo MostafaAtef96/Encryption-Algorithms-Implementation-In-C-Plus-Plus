@@ -1,3 +1,4 @@
+/*Operate in the Field GF2Power8*/
 /*
 Given 2 numbers in Hex format that represent 2 polynomials in GF(28) with m(x) = x8 + x4 + x3 + x + 1. Find the result of Adding and Multiplying those numbers. Note: Result of addition is the same as the result of subtraction.
 
