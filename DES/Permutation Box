@@ -1,0 +1,57 @@
+/*
+Given a permutation box and an input plaintext(in Hex format), print the output of the permutation box(in Hex format). It is worth noting that the given permutation box doesn't have to be a straight permutation box(Where the size of the input is equal to the size of the output.) It can be either an expansion permutation box(Where the output is larger than the input, in this case, some bits of the input are repeated in the output.) or a contraction permutation box(Where the output is smaller than the input, in this case, some bits of the input do not appear in the output.)
+
+Input
+The input consists of 4 lines. The first line consists of a single number S that represents the size of the output of the permutation box (4 ≤ S ≤ 256) also S is a multiple of 4. The second line contains S numbers in decimal format separated by spaces which represent the values inside the permutation box that represent the order in which the output should be with respect to the input The values will be always within the size of the input (From 1 to N). The third line consists of a single number N that represents the size of the input of the permutation box (4 ≤ N ≤ 64) also N is a multiple of 4. The fourth line contains N / 4 Hex characters that represent the input to the permutation box.
+
+Output
+The output should be a single line that consists of the output of the permutation box in hex format. It would be S / 4 characters. All Hex characters should be in Capital not small. Small letters might get you a wrong answer.
+*/
+
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <bitset>
+#include <iomanip>
+ 
+using namespace std;
+ 
+int main() {
+	/*Reading inputs*/
+	int outputSize;
+	cin >> outputSize;
+	int* permutationBox = new int[outputSize];
+	for (int i = 0; i < outputSize; i++) {
+		cin >> permutationBox[i];
+	}
+	int inputSize;
+	cin >> inputSize;
+	string input;
+	cin >> input;
+	/*Hexadecimal input conversion to Binary*/
+	string binaryInput = "";
+	for (int i = 0; i < inputSize/4; i++) {
+		char s = input[i];
+		stringstream ss;
+		ss << hex << s;
+		unsigned n;
+		ss >> n;
+		bitset<4> b(n);
+		binaryInput += b.to_string();
+	}
+	/*Output calculations*/
+	string output = "";
+	for (int i = 0; i < outputSize; i++) {
+		output += binaryInput[permutationBox[i]-1];
+	}
+		/*Binary string to Decimal*/
+	unsigned long long decimalOutput = stoull(output, 0, 2);
+		/*Formatting output*/
+	stringstream temp;
+	temp << uppercase << setfill('0') << setw(2) << hex << decimalOutput;
+	cout << temp.str() << endl;
+}
+/*
+https://stackoverflow.com/questions/18310952/convert-strings-between-hex-format-and-binary-format
+https://www.quora.com/Can-we-directly-convert-a-binary-string-into-a-decimal-in-C++
+*/
